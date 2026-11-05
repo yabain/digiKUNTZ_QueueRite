@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: 'home-page.component.html',
   styleUrls: ['home-page.component.scss']
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit, OnDestroy {
   router = inject(Router);
   http = inject(HttpClient);
 
@@ -19,6 +19,14 @@ export class HomePageComponent {
   apiUrl = '';
   modalType = 'pos';
   files: any[] = [];
+
+  // Redirection à l'ouverture + plein écran (réglé dans les paramètres).
+  redirectOption = 'home';
+  fullscreen = false;
+  redirectOpen = false;
+  redirectLabel = '';
+  countdown = 5;
+  private countdownTimer: ReturnType<typeof setInterval> | null = null;
 
   // Identical copies are rendered so the marquee loops seamlessly and
   // always fills the viewport (even on 4K screens).
@@ -43,10 +51,90 @@ export class HomePageComponent {
     return `http://${host}:3000/api`;
   }
 
+  ngOnInit(): void {
+    this.loadFiles();
+    this.fullscreen = localStorage.getItem('queue_fullscreen') === '1';
+    this.redirectOption = localStorage.getItem('queue_redirect') || 'home';
+    if (this.redirectOption !== 'home') this.beginRedirect();
+  }
+
+  ngOnDestroy(): void {
+    this.stopCountdown();
+  }
+
+  loadFiles(): void {
+    this.http.get<any[]>(`${this.apiBase()}/queues`).subscribe((x) => (this.files = x || []));
+  }
+
+  /** Nom d'une file à partir de son id, pour le libellé de redirection. */
+  private fileName(id: string): string {
+    const f = this.files.find((x) => String(x._id) === String(id));
+    return f ? f.name : '';
+  }
+
+  private redirectRoute(): string | null {
+    const o = this.redirectOption;
+    if (o === 'login') return '/login';
+    if (o.startsWith('pos:')) return `/file/${o.slice(4)}/pos`;
+    if (o.startsWith('display:')) return `/displays/${o.slice(8)}`;
+    return null;
+  }
+
+  private redirectMessage(): string {
+    const o = this.redirectOption;
+    if (o === 'login') return 'Redirection à la page de connexion';
+    if (o.startsWith('pos:')) {
+      const n = this.fileName(o.slice(4));
+      return n ? `Redirection vers le POS de ${n}` : 'Redirection vers le POS';
+    }
+    if (o.startsWith('display:')) {
+      const n = this.fileName(o.slice(8));
+      return n ? `Redirection vers l'écran de ${n}` : "Redirection vers l'écran";
+    }
+    return '';
+  }
+
+  beginRedirect(): void {
+    this.redirectLabel = this.redirectMessage();
+    this.countdown = 5;
+    this.redirectOpen = true;
+    this.stopCountdown();
+    this.countdownTimer = setInterval(() => {
+      this.countdown--;
+      if (this.countdown <= 0) {
+        this.stopCountdown();
+        this.goToRedirect();
+      }
+    }, 1000);
+  }
+
+  private stopCountdown(): void {
+    if (this.countdownTimer) {
+      clearInterval(this.countdownTimer);
+      this.countdownTimer = null;
+    }
+  }
+
+  cancelRedirect(): void {
+    this.stopCountdown();
+    this.redirectOpen = false;
+  }
+
+  openRedirectNow(): void {
+    this.stopCountdown();
+    this.goToRedirect();
+  }
+
+  private goToRedirect(): void {
+    const r = this.redirectRoute();
+    this.redirectOpen = false;
+    if (r) this.router.navigateByUrl(r);
+  }
+
   openModal(type: string) {
     this.modalType = type;
     this.showModal = true;
-    this.http.get<any[]>(`${this.apiBase()}/queues`).subscribe((x) => (this.files = x || []));
+    this.loadFiles();
   }
 
   selectFile(f: any) {
@@ -60,11 +148,18 @@ export class HomePageComponent {
 
   openSettings(): void {
     this.apiUrl = this.apiBase();
+    this.fullscreen = localStorage.getItem('queue_fullscreen') === '1';
+    this.redirectOption = localStorage.getItem('queue_redirect') || 'home';
+    this.loadFiles();
     this.showSettings = true;
   }
   closeSettings(): void { this.showSettings = false; }
-  saveApiUrl(): void {
+  saveSettings(): void {
     localStorage.setItem('queue_api', this.apiUrl?.trim() || this.apiBase());
+    localStorage.setItem('queue_fullscreen', this.fullscreen ? '1' : '0');
+    localStorage.setItem('queue_redirect', this.redirectOption);
     this.closeSettings();
+    // Si une redirection autre que l'accueil est choisie, on la lance.
+    if (this.redirectOption !== 'home') this.beginRedirect();
   }
 }

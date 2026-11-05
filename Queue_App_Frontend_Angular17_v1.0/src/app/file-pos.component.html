@@ -40,18 +40,7 @@
     </div>
   </div>
 
-<div class="kiosk-modal" *ngIf="showKioskPrompt" role="dialog" aria-modal="true" aria-label="Mode borne">
-  <div class="kiosk-card">
-    <h3>Passer en mode Kiosk</h3>
-    <p>Voulez-vous ouvrir cette page en plein écran ?</p>
-    <div class="kiosk-actions">
-      <button class="btn-ghost" (click)="dismissKiosk()">Non</button>
-      <button class="btn-primary" (click)="confirmKiosk()">Oui</button>
-    </div>
-  </div>
-</div>
-
-<!-- Zone d'impression : invisible à l'écran, seule la zone imprimée (58 mm). -->
+<!-- Zone d'impression : invisible à l'écran, seule la zone imprimée (80 mm). -->
 <div class="print-zone" aria-hidden="true">
   <ng-container *ngIf="printData">
     <div class="print-number">{{ printData.number }}</div>

@@ -47,7 +47,56 @@
     <h2>Paramètres</h2>
     <label for="api-url-home">Adresse du serveur</label><br>
     <input id="api-url-home" type="text" [(ngModel)]="apiUrl" placeholder="http://SERVEUR:3000/api" />
-    <br><br>
-    <button class="btn-save" type="button" (click)="saveApiUrl()">Enregistrer</button>
+    <br>
+
+    <label class="fullscreen-option">
+      <input type="checkbox" [(ngModel)]="fullscreen" />
+      Ouvrir en plein écran (kiosk)
+    </label>
+
+    <hr />
+
+    <div class="redirect-section">
+      <h3>Page de redirection</h3>
+      <p>À l'ouverture de la page d'accueil, rediriger vers&nbsp;:</p>
+
+      <label class="radio-option">
+        <input type="radio" name="redirect" [(ngModel)]="redirectOption" value="home" />
+        Accueil
+      </label>
+      <label class="radio-option">
+        <input type="radio" name="redirect" [(ngModel)]="redirectOption" value="login" />
+        Connexion
+      </label>
+
+      <div class="redirect-files">
+        <div class="file-radio" *ngFor="let f of files">
+          <label class="radio-option">
+            <input type="radio" name="redirect" [(ngModel)]="redirectOption" [value]="'pos:' + f._id" />
+            POS {{ f.name }}
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="redirect" [(ngModel)]="redirectOption" [value]="'display:' + f._id" />
+            Écran {{ f.name }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <button class="btn-save" type="button" (click)="saveSettings()">Enregistrer</button>
+  </div>
+</div>
+
+<!-- Modal de redirection automatique (décompte) -->
+<div class="redirect-modal" *ngIf="redirectOpen" role="dialog" aria-modal="true" aria-label="Redirection">
+  <div class="redirect-card">
+    <h2>{{ redirectLabel }}</h2>
+    <div class="countdown">{{ countdown }}</div>
+    <p>Redirection automatique dans {{ countdown }} secondes…</p>
+    <div class="redirect-actions">
+      <button type="button" class="btn-ghost" (click)="cancelRedirect()">Annuler</button>
+      <button type="button" class="btn-primary" (click)="openRedirectNow()">Ouvrir</button>
+    </div>
   </div>
 </div>

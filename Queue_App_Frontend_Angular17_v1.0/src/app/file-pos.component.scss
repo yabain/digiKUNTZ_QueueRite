@@ -211,9 +211,9 @@
 .kiosk-actions .btn-primary { padding: 10px 18px; border-radius: 8px; border: none; background: #172033; color: #fff; font-weight: 700; cursor: pointer; }
 
 /* ------------------------------------------------------------------ *
- * Impression ticket (58 mm) — invisible à l'écran, seule à l'impression.
+ * Impression ticket (80 mm) — invisible à l'écran, seule à l'impression.
  * Fonctionne en silencieux quand Chrome est lancé avec --kiosk-printing
- * et que la POS58 est l'imprimante par défaut Windows.
+ * et que la POS80 est l'imprimante par défaut Windows.
  * ------------------------------------------------------------------ */
 .print-zone {
     display: none;
@@ -225,21 +225,27 @@
         margin: 0;
     }
 
-    /* Masque toute la page sauf la zone ticket. */
-    body * {
-        visibility: hidden;
+    /* Seule la zone ticket doit être imprimée : on masque TOUS les autres
+       blocs de l'écran POS (display:none, sans hauteur) pour éviter toute
+       page supplémentaire. */
+    .pos-page {
+        display: block !important;
+        height: auto !important;
+        overflow: visible;
+        padding: 0;
     }
 
-    .print-zone,
-    .print-zone * {
-        visibility: visible;
+    .pos-page > * {
+        display: none !important;
+    }
+
+    .pos-page > .print-zone {
+        display: block !important;
     }
 
     .print-zone {
         display: block !important;
-        position: absolute;
-        left: 0;
-        top: 0;
+        position: static;
         width: 100%;
         padding: 6mm 2mm 6mm;
         font-family: 'Courier New', Courier, monospace;
@@ -250,9 +256,10 @@
     }
 
     .print-number {
-        font-size: 30px;
+        font-size: 48px;
         font-weight: 900;
-        letter-spacing: 2px;
+        letter-spacing: 3px;
+        line-height: 1.1;
     }
 
     .print-datetime {

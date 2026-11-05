@@ -22,7 +22,6 @@ export class FilePOSComponent implements OnInit, OnDestroy {
   error = '';
   generating = false;
   logoBroken = false;
-  showKioskPrompt = true;
 
   ngOnInit(): void {
     this.fileId = this.route.snapshot.paramMap.get('id') || '';
@@ -32,6 +31,14 @@ export class FilePOSComponent implements OnInit, OnDestroy {
       return;
     }
     this.load();
+    // Plein écran si demandé dans les paramètres (kiosk : déjà en plein écran).
+    if (localStorage.getItem('queue_fullscreen') === '1') {
+      const el = document.documentElement as any;
+      try {
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      } catch { /* kiosk déjà plein écran */ }
+    }
   }
 
   /** URL de base de l'API : override local sinon derivee de l'hote (marche en reseau). */
@@ -145,13 +152,6 @@ export class FilePOSComponent implements OnInit, OnDestroy {
   saveApiUrl(): void {
     localStorage.setItem('queue_api', this.apiUrl?.trim() || this.apiBase());
     this.closeSettings();
-  }
-  dismissKiosk(): void { this.showKioskPrompt = false; }
-  confirmKiosk(): void {
-    this.showKioskPrompt = false;
-    const el = document.documentElement as any;
-    if (el.requestFullscreen) el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
   }
 
   goHome(): void {

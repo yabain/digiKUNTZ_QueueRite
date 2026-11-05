@@ -118,4 +118,28 @@
     to {
         transform: translateX(-14.2857%);
     }
-}.settings-modal { position: fixed; inset: 0; background: rgba(23,32,51,.65); display: flex; align-items: center; justify-content: center; z-index: 100; } .settings-card { background: #fff; border-radius: 16px; padding: 28px 32px; max-width: 420px; width: 90%; box-shadow: 0 20px 50px rgba(23,32,51,.25); position: relative; text-align: center; } .close-btn { position: absolute; top: 12px; right: 12px; background: transparent; border: none; font-size: 22px; cursor: pointer; color: #64748b; } .btn-save { padding: 10px 18px; border-radius: 8px; border: none; background: #172033; color: #fff; font-weight: 700; cursor: pointer; }
+}.settings-modal { position: fixed; inset: 0; background: rgba(23,32,51,.65); display: flex; align-items: center; justify-content: center; z-index: 100; } .settings-card { background: #fff; border-radius: 16px; padding: 28px 32px; max-width: 460px; width: 92%; box-shadow: 0 20px 50px rgba(23,32,51,.25); position: relative; text-align: left; max-height: 86vh; overflow-y: auto; } .close-btn { position: absolute; top: 12px; right: 12px; background: transparent; border: none; font-size: 22px; cursor: pointer; color: #64748b; } .btn-save { padding: 10px 18px; border-radius: 8px; border: none; background: #172033; color: #fff; font-weight: 700; cursor: pointer; text-align: center; display: block; width: 100%; }
+
+.settings-card h2 { margin-top: 0; }
+.settings-card label { font-weight: 600; }
+.settings-card .fullscreen-option { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-weight: 500; cursor: pointer; }
+
+.redirect-section { margin-top: 4px; }
+.redirect-section h3 { font-size: 16px; margin: 4px 0 2px; color: #172033; }
+.redirect-section p { color: #64748b; margin: 0 0 10px; font-size: 13px; }
+
+.radio-option { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; cursor: pointer; font-weight: 500; }
+.radio-option:hover { background: #f1f5f9; }
+.radio-option input { accent-color: #172033; }
+
+.redirect-files { margin: 8px 0 0; padding-left: 8px; border-left: 2px solid #e2e8f0; }
+.file-radio { margin: 4px 0; }
+
+.redirect-modal { position: fixed; inset: 0; background: rgba(23,32,51,.65); display: flex; align-items: center; justify-content: center; z-index: 200; }
+.redirect-card { background: #fff; border-radius: 16px; padding: 32px 36px; max-width: 420px; width: 90%; box-shadow: 0 20px 50px rgba(23,32,51,.25); text-align: center; }
+.redirect-card h2 { font-size: 20px; margin: 0 0 14px; color: #172033; }
+.redirect-card .countdown { font-size: 64px; font-weight: 800; line-height: 1; color: #172033; }
+.redirect-card p { color: #64748b; margin: 10px 0 22px; font-size: 14px; }
+.redirect-actions { display: flex; gap: 12px; justify-content: center; }
+.redirect-actions .btn-ghost { padding: 10px 18px; border-radius: 8px; border: 1px solid #dde3ec; background: #fff; color: #334155; font-weight: 600; cursor: pointer; }
+.redirect-actions .btn-primary { padding: 10px 18px; border-radius: 8px; border: none; background: #172033; color: #fff; font-weight: 700; cursor: pointer; }
