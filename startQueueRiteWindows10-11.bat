@@ -6,8 +6,11 @@ rem  Script de DEMARRAGE QUOTIDIEN de la borne Queue Rite (Windows 10/11).
 rem
 rem  Demarre, dans l'ordre, uniquement ce qui ne tourne pas encore :
 rem   1. MongoDB (service MongoDBQueue)      [base de donnees]
-rem   2. Backend  (node dist\main.js)        [port 3000, accessible reseau]
-rem   3. Frontend (ng serve --host 0.0.0.0)  [port 4200, accessible reseau]
+rem   2. Backend  (node dist\main.js)        [port 3000, reseau, ARRIERE-PLAN]
+rem   3. Frontend (ng serve --host 0.0.0.0)  [port 4200, reseau, ARRIERE-PLAN]
+rem      (backend et frontend tournent en processus caches : aucune
+rem       fenetre de terminal ne vient recouvrir le kiosque Chrome.
+rem       Sortie et erreurs sont ecrites dans le dossier "logs".)
 rem   4. Attend que les ports 3000 et 4200 repondent
 rem   5. Ouvre Chrome en Kiosk (`--kiosk --kiosk-printing`) sur
 rem      http://localhost:4200  => impression SILENCIEUSE sur la POS58
@@ -18,6 +21,7 @@ rem  ---- Chemins derives de l'emplacement de ce script (racine Queue_Rite) ----
 set "SCRIPT_DIR=%~dp0"
 set "BACKEND_DIR=%SCRIPT_DIR%Queue_App_Backend_v1.0"
 set "FRONTEND_DIR=%SCRIPT_DIR%Queue_App_Frontend_Angular17_v1.0"
+set "LOG_DIR=%SCRIPT_DIR%logs"
 set "MONGO_SERVICE=MongoDBQueue"
 
 rem  ---- Ports ----
@@ -60,9 +64,10 @@ if "%PORTUP%"=="1" (
     if not exist "%BACKEND_DIR%\dist\main.js" (
         echo   [ERREUR] dist\main.js absent. Build requis ^(windows10-11Deployment.bat^).
     ) else (
-        start "QueueRite Backend" /D "%BACKEND_DIR%" cmd /k "node dist\main.js"
+        if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "$p = Start-Process -FilePath 'node.exe' -ArgumentList 'dist\main.js' -WorkingDirectory '%BACKEND_DIR%' -WindowStyle Hidden -PassThru -RedirectStandardOutput '%LOG_DIR%\backend.out.log' -RedirectStandardError '%LOG_DIR%\backend.err.log'; Set-Content -LiteralPath '%LOG_DIR%\backend.pid' -Value $p.Id -Encoding ASCII"
         netsh advfirewall firewall add rule name="QueueRite-Backend" dir=in action=allow protocol=TCP localport=%BACKEND_PORT% >nul 2>&1
-        echo   [OK] Backend lance.
+        echo   [OK] Backend lance en arriere-plan ^(logs : logs\backend.*.log^).
     )
 )
 
@@ -72,9 +77,10 @@ call :is_port_up %FRONTEND_PORT%
 if "%PORTUP%"=="1" (
     echo   [OK] Frontend deja actif sur le port %FRONTEND_PORT%.
 ) else (
-    start "QueueRite Frontend" /D "%FRONTEND_DIR%" cmd /k "ng serve --host 0.0.0.0 --port %FRONTEND_PORT%"
+    if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "$p = Start-Process -FilePath 'cmd.exe' -ArgumentList '/c','ng serve --host 0.0.0.0 --port %FRONTEND_PORT%' -WorkingDirectory '%FRONTEND_DIR%' -WindowStyle Hidden -PassThru -RedirectStandardOutput '%LOG_DIR%\frontend.out.log' -RedirectStandardError '%LOG_DIR%\frontend.err.log'; Set-Content -LiteralPath '%LOG_DIR%\frontend.pid' -Value $p.Id -Encoding ASCII"
     netsh advfirewall firewall add rule name="QueueRite-Frontend" dir=in action=allow protocol=TCP localport=%FRONTEND_PORT% >nul 2>&1
-    echo   [OK] Frontend lance.
+    echo   [OK] Frontend lance en arriere-plan ^(logs : logs\frontend.*.log^).
 )
 
 rem ------------------- 4. Attente des ports -------------------
