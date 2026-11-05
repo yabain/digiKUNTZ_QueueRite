@@ -1,0 +1,77 @@
+<section class="config-page" *ngIf="!loading">
+  <header class="page-head">
+    <div>
+      <a routerLink="/counters" class="back">← Retour aux caisses</a>
+      <p class="eyebrow">
+        {{ isCreate ? 'Création d’une caisse' : 'Modification de la caisse' }}
+      </p>
+      <h1>{{ isCreate ? 'Nouvelle caisse' : name }}</h1>
+      <p class="subtitle">Configurez le login et le mot de passe de la caisse. Choisissez une file au départ.</p>
+    </div>
+    <div class="head-actions">
+      <button type="button" class="btn ghost" (click)="cancel()">Annuler</button>
+      <button
+        type="button"
+        class="btn primary"
+        (click)="save()"
+        [disabled]="!isValid || saving"
+      >
+        {{ saving ? 'Sauvegarde…' : (isCreate ? 'Créer la caisse' : 'Enregistrer') }}
+      </button>
+    </div>
+  </header>
+
+  <section class="panel form-grid">
+    <div class="panel-main">
+      <div class="panel-head">
+        <h2>Informations de la caisse</h2>
+        <span class="hint">Les champs obligatoires sont marqués *</span>
+      </div>
+
+      <label class="field">
+        <span class="field-label">File *</span>
+        <select [(ngModel)]="queueId" required class="select">
+          <option [ngValue]="null" disabled>Sélectionner une file…</option>
+          <option *ngFor="let q of queues" [ngValue]="q._id">{{ q.name }} ({{ q.code }})</option>
+        </select>
+        <small class="field-error" *ngIf="!queueId">Sélectionnez une file.</small>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Nom *</span>
+        <input type="text" [(ngModel)]="name" maxlength="120" placeholder="Ex. Caisse 1" required />
+        <small class="field-error" *ngIf="!name || name.length > 120">{{ name?.length || 0 }} caractères maximum (120)</small>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Login *</span>
+        <input type="text" [(ngModel)]="username" maxlength="80" placeholder="Ex. caissier01" required />
+        <small class="field-error" *ngIf="!username || username.length > 80">{{ username?.length || 0 }} caractères maximum (80)</small>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Mot de passe {{ isCreate ? '*' : '' }}</span>
+        <input
+          type="password"
+          [(ngModel)]="password"
+          maxlength="120"
+          [placeholder]="isCreate ? 'Minimum 4 caractères' : 'Laisser vide pour conserver le mot de passe actuel'"
+        />
+        <small class="field-error" *ngIf="isCreate && (!password || password.trim().length < 4)">{{ (password ? password.trim() : '').length }} caractères minimum (4)</small>
+        <small class="hint" *ngIf="!isCreate">Laisser vide pour conserver le mot de passe actuel.</small>
+      </label>
+
+      <div class="checkbox-row">
+        <input type="checkbox" [(ngModel)]="active" />
+        <span>Caisse active</span>
+      </div>
+    </div>
+
+    <aside class="config-aside">
+      <p class="muted">Le login ne peut être utilisé que pour cette caisse.</p>
+    </aside>
+  </section>
+
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+  <div class="alert success" *ngIf="success">{{ success }}</div>
+</section>

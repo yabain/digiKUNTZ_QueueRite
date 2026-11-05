@@ -1,0 +1,20 @@
+<div class="login-page" role="main" aria-label="Connexion">
+  <div class="login-card">
+    <img src="../../assets/img/icons/logo_dk_queurite_0.png" alt="" style="width: 100px;">
+    <h1>Connexion</h1>
+    <!-- <p class="subtitle">Accédez à votre espace Queue App.</p> -->
+
+    <form (ngSubmit)="submit()" autocomplete="off" novalidate>
+      <label for="login-username">Identifiant</label>
+      <input id="login-username" name="username" type="text" [(ngModel)]="username" required autocomplete="username" />
+
+      <label for="login-password">Mot de passe</label>
+      <input id="login-password" name="password" type="password" [(ngModel)]="password" required autocomplete="current-password" />
+
+      <button type="submit" class="btn-primary" [disabled]="saving">Se connecter</button>
+      <p class="error" *ngIf="error">{{ error }}</p>
+    </form>
+
+    <a class="btn-back" (click)="navigateByUrl('/')">← Retour à l'accueil</a>
+  </div>
+</div>

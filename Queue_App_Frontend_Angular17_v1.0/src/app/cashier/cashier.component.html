@@ -1,0 +1,85 @@
+<div class="app">
+  <header class="topbar">
+    <span class="account" >File : {{ queueName }}</span> |
+    <span style="font-size:14px;">Poste : {{ counterName }}</span>
+    <!-- <a class="top-link" routerLink="/counters">⚒ Settings</a> -->
+    <button class="btn" (click)="logout()"
+    style="background-color: #ee1212; color: #fff; margin-left: 50px;">
+        <img src="../../assets/img/icons/logout_icon.png" alt="" style="width: 20px;">
+         Déconnexion </button>
+  </header>
+
+  <!-- <section class="counter-heading">
+    COUNTER :{{ counterId || '--' }}<br>
+    <small style="font-size:14px;opacity:.8">File : {{ queueName }}</small>
+  </section> -->
+
+
+  <div class="main-content">
+    <div class="current-label">Numéro courant</div>
+    <div class="number">{{ currentTicket?.displayNumber || '---' }}</div>
+
+    <div class="details">
+      <div class="detail-row">
+        <span class="detail-name">Durée de service :</span>
+        <span class="detail-value time">{{ processingTime }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-name">Durée d'attente :</span>
+        <span class="detail-value time">{{ waitingTime }}</span>
+      </div>
+      <!-- <div class="detail-row">
+        <span class="detail-name">Transaction:</span>
+        <span class="detail-value">{{ currentTicket?.transaction || '—' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-name">Transaction Types:</span>
+        <span class="detail-value">{{ currentTicket?.transactionTypes || '' }}</span>
+      </div> -->
+    </div>
+  </div>
+
+  <nav class="actions" aria-label="Queue actions">
+    <button class="action next" (click)="callNext()" aria-label="Get next number">
+        <img src="../../assets/img/icons/next_icon.png" alt="" class="symbol">
+      <span class="action-label">Suivant</span>
+    </button>
+    <button class="action call" (click)="recall()" aria-label="Call again">
+        <img src="../../assets/img/icons/speaker_icon.png" alt="" class="symbol">
+      <span class="action-label">Rappeler</span>
+    </button>
+    <button class="action stand" (click)="pause()" aria-label="Stand by">
+        <img src="../../assets/img/icons/pause_icon.png" alt="" class="symbol">
+      <span class="action-label">Pause</span>
+    </button>
+    <button class="action no-show" aria-label="Finished" (click)="logout()">
+        <img src="../../assets/img/icons/logout_icon.png" alt="" class="symbol">
+      <span class="action-label">Terminé</span>
+    </button>
+  </nav>
+  
+  <footer class="footer">
+    Copyright © 2026 digiKUNTZ Queue Rite. All Rights Reserved.
+  </footer>
+
+  <div class="modal-overlay" *ngIf="showModal" role="dialog" aria-modal="true">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <ng-container *ngIf="modalMode === 'kiosk'; else logoutBody">
+        <h3>Passer en mode Kiosk</h3>
+        <p>Voulez-vous ouvrir cette page en plein écran ?</p>
+        <div class="modal-actions">
+          <button class="btn-ghost" (click)="dismissModal()">Non</button>
+          <button class="btn btn-primary" (click)="confirmKiosk()">Oui</button>
+        </div>
+      </ng-container>
+      <ng-template #logoutBody>
+        <h3>Se déconnecter ?</h3>
+        <p>Voulez-vous vraiment quitter cette session de caisse ?</p>
+        <div class="modal-actions">
+          <button class="btn-ghost" (click)="cancelLogout()">Annuler</button>
+          <button class="btn-danger" (click)="confirmLogout()">Se déconnecter</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<div class="layout-root" *ngIf="showNav; else bare">
+  <aside class="app-sidebar" aria-label="Navigation principale">
+    <div class="brand">
+      <img src="../../assets/img/icons/logo_dk_queurite_00.png" alt="" width="150px">
+    </div>
+    <nav aria-label="Menu arrière-office">
+      <a routerLink="/dashboard" routerLinkActive="active">Tableau de bord</a>
+      <a routerLink="/queues" routerLinkActive="active">Files</a>
+      <a routerLink="/counters" routerLinkActive="active">Postes de services</a>
+      <a routerLink="/users" routerLinkActive="active">Utilisateurs</a>
+      <!-- <a routerLink="/displays" routerLinkActive="active">Écrans</a> -->
+      <a routerLink="/tickets" routerLinkActive="active">Tickets</a>
+      <!-- <a routerLink="/announcements" routerLinkActive="active">Annonces</a> -->
+    </nav>
+  </aside>
+
+  <header class="app-topbar" aria-label="En-tête">
+    <a *ngIf="!connected" class="btn-login" routerLink="/login">Connexion</a>
+    <a *ngIf="connected" class="btn" (click)="logout()" href="#" style="background-color: #eae8e8; color: #000;">Déconnexion</a>
+  </header>
+
+  <main [class.full-bleed]="fullBleed" [class.no-scroll]="router.url.startsWith('/caisse') || isPosUrl(router.url) || router.url === '/login'"><router-outlet/></main>
+</div>
+
+<ng-template #bare>
+  <main [class.full-bleed]="fullBleed" [class.no-scroll]="router.url.startsWith('/caisse') || isPosUrl(router.url) || router.url === '/login'"><router-outlet/></main>
+</ng-template>

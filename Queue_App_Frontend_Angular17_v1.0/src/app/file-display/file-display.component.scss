@@ -1,0 +1,490 @@
+:host {
+    --green: #91cc00;
+    --green-dark: #7fb600;
+    --text: #171717;
+    display: block;
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--text);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.queue-screen {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 33.2% 66.8%;
+    grid-template-rows: minmax(0, 1fr) auto;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #fff;
+}
+
+/* Colonne de gauche : tickets en cours */
+.ticket-sidebar {
+    grid-column: 1;
+    grid-row: 1;
+    display: grid;
+    grid-template-rows: auto repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    padding: 10px 13px;
+    background: var(--orange);
+    min-width: 0;
+    min-height: 0;
+}
+
+.sidebar-title {
+    margin: 0;
+    align-self: center;
+    color: #fff;
+    font-size: clamp(14px, 1.55vw, 22px);
+    line-height: 1.15;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ticket-card {
+    min-height: 0;
+    min-width: 0;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    align-content: center;
+    padding: clamp(10px, 1.5vw, 22px) clamp(10px, 1.8vw, 25px);
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.ticket-card.is-empty {
+    opacity: 0.62;
+}
+
+.ticket-number-row {
+    display: grid;
+    grid-template-columns: minmax(34px, 0.28fr) minmax(0, 1fr);
+    align-items: center;
+    column-gap: clamp(8px, 1vw, 16px);
+    width: 100%;
+    min-width: 0;
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: 15.5px;
+    font-size: clamp(54px, 8vw, 100px);
+    white-space: nowrap;
+}
+
+.ticket-number-row span:last-child {
+    text-align: right;
+    min-width: 0;
+}
+
+.ticket-label {
+    margin-top: 8px;
+    font-size: clamp(13px, 1.75vw, 25px);
+    line-height: 1.1;
+    font-weight: 800;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+/* Partie droite : image / vidéo, heure et bandeau inférieur */
+.main-display {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    background: #fff;
+}
+
+.hero {
+    position: relative;
+    min-height: 280px;
+    overflow: hidden;
+    background: #111;
+}
+
+.hero-media {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.clock {
+    position: absolute;
+    top: 18px;
+    right: 26px;
+    color: #fff;
+    font-size: clamp(54px, 6.2vw, 70px);
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.18);
+}
+
+.brand-bar {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 17px 10px 20px;
+    background: #fff;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+}
+
+.brand-mark {
+    position: relative;
+    width: 58px;
+    height: 40px;
+    flex: 0 0 auto;
+}
+
+.cloud {
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 42px;
+    height: 22px;
+    border: 3px solid #171717;
+    border-radius: 18px 18px 12px 12px;
+    background: #fff;
+}
+
+.cloud::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: -9px;
+    width: 19px;
+    height: 16px;
+    border: 3px solid #171717;
+    border-bottom: 0;
+    border-radius: 15px 15px 0 0;
+    background: #fff;
+}
+
+.people {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: flex-end;
+    gap: 1px;
+    z-index: 1;
+}
+
+.person {
+    width: 12px;
+    height: 17px;
+    position: relative;
+    border-radius: 7px 7px 2px 2px;
+    background: var(--green);
+    border: 1px solid #fff;
+}
+
+.person::before {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    left: 1px;
+    top: -7px;
+    border-radius: 50%;
+    background: #171717;
+}
+
+.person:nth-child(2) {
+    height: 21px;
+    background: #171717;
+}
+
+.person:nth-child(3) {
+    height: 15px;
+}
+
+.brand-name {
+    font-size: clamp(18px, 2vw, 25px);
+    line-height: 1;
+    font-weight: bold;
+    letter-spacing: -0.8px;
+    white-space: nowrap;
+}
+
+.brand-name span {
+    color: #EE8329;
+}
+
+.brand-subtitle {
+    font-size: 0.48em;
+    font-weight: 500;
+    letter-spacing: 0;
+}
+
+.branch {
+    flex: 0 0 auto;
+    max-width: 42%;
+    padding: 8px 12px;
+    border-radius: 9px;
+    background: var(--green);
+    color: #fff;
+    font-size: clamp(14px, 1.8vw, 22px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Bandeau de message défilant : toute la largeur, sous les deux colonnes */
+.footer-message {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: #eee;
+    color: #171717;
+    font-size: clamp(14px, 1.8vw, 22px);
+    line-height: 1.25;
+}
+
+.ticker {
+    display: flex;
+    width: max-content;
+    animation: ticker-scroll 45s linear infinite;
+    will-change: transform;
+}
+
+.ticker-group {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    padding-right: 3rem;
+    flex: 0 0 auto;
+}
+
+.ticker-item {
+    white-space: nowrap;
+}
+
+.sep {
+    color: inherit;
+    margin-left: 0.5rem;
+}
+
+@keyframes ticker-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-12.5%);
+    }
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Écran sans file sélectionnée */
+.no-queue {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
+    text-align: center;
+    background: #fff;
+
+    h1 {
+        margin: 0;
+        font-size: clamp(28px, 5vw, 56px);
+        font-weight: 900;
+        letter-spacing: -1px;
+
+        span {
+            color: var(--green-dark);
+        }
+    }
+
+    p {
+        margin: 0;
+        color: #555;
+        font-size: clamp(15px, 1.6vw, 20px);
+    }
+
+    a {
+        color: var(--green-dark);
+        font-weight: 700;
+        text-decoration: none;
+    }
+}
+
+@media (min-width: 1500px) {
+    .queue-screen {
+        max-height: 100vh;
+    }
+}
+
+@media (max-width: 700px) {
+    .queue-screen {
+        grid-template-columns: 38% 62%;
+        height: 100svh;
+    }
+
+    .ticket-sidebar {
+        gap: 7px;
+        padding: 8px 7px;
+    }
+
+    .ticket-card {
+        border-radius: 10px;
+        padding: 9px 8px;
+    }
+
+    .ticket-number-row {
+        font-size: clamp(27px, 6vw, 54px);
+        letter-spacing: -1px;
+        grid-template-columns: minmax(24px, 0.28fr) minmax(0, 1fr);
+    }
+
+    .ticket-label {
+        font-size: clamp(10px, 2.4vw, 16px);
+        margin-top: 7px;
+    }
+
+    .hero {
+        min-height: 220px;
+    }
+
+    .brand-bar {
+        min-height: 58px;
+        padding: 8px;
+        gap: 5px;
+    }
+
+    .brand-mark {
+        transform: scale(0.75);
+        transform-origin: left center;
+        width: 45px;
+    }
+
+    .brand {
+        gap: 0;
+    }
+
+    .brand-name {
+        font-size: clamp(15px, 5vw, 25px);
+    }
+
+    .branch {
+        font-size: clamp(11px, 2.6vw, 15px);
+        padding: 7px;
+    }
+
+    .footer-message {
+        font-size: clamp(11px, 2.6vw, 15px);
+        min-height: 48px;
+    }
+
+    .clock {
+        top: 10px;
+        right: 12px;
+    }
+}
+
+@media (max-width: 420px) {
+    .queue-screen {
+        grid-template-columns: 40% 60%;
+    }
+
+    .ticket-number-row {
+        font-size: 25px;
+    }
+
+    .ticket-label {
+        font-size: 10px;
+    }
+
+    .brand-mark {
+        display: none;
+    }
+
+    .branch {
+        white-space: normal;
+        text-align: center;
+    }
+}
+
+.casse-card {
+    background: #fff;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .08)
+}
+
+.casse-card.is-red {
+    background: #a52e10;
+    border-color: #f15e5a;
+    color: #fff
+}
+
+.casse-card.is-broken-primary {
+    background: #8f8f8f;
+    border-color: #ffffff;
+    color: #fff;
+    opacity: .85
+}
+
+.casse-card.is-white {
+    background: #fff;
+    border-color: #fff;
+    color: #20252d
+}
+
+.logo{
+    width: 100px;
+}
+.kiosk-modal { position: fixed; inset: 0; background: rgba(23,32,51,.65); display: flex; align-items: center; justify-content: center; z-index: 200; }
+.kiosk-card { background: #fff; border-radius: 16px; padding: 28px 32px; max-width: 420px; width: 90%; box-shadow: 0 20px 50px rgba(23,32,51,.2); text-align: center; }
+.kiosk-card h3 { font-size: 22px; margin: 0 0 8px; color: #172033; }
+.kiosk-card p { color: #64748b; margin: 0 0 20px; }
+.kiosk-actions { display: flex; gap: 12px; justify-content: center; }
+.kiosk-actions .btn-ghost { padding: 10px 18px; border-radius: 8px; border: 1px solid #dde3ec; background: #fff; color: #334155; font-weight: 600; cursor: pointer; }
+.kiosk-actions .btn-primary { padding: 10px 18px; border-radius: 8px; border: none; background: #172033; color: #fff; font-weight: 700; cursor: pointer; }
+

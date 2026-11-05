@@ -1,0 +1,99 @@
+/* === App shell: white sidebar + white minimal topbar === */
+.layout-root {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+}
+
+.app-sidebar {
+  flex: 0 0 240px;
+  width: 240px;
+  background: #fff;
+  border-right: 1px solid #e8ecf1;
+  padding: 28px 16px 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.app-sidebar .brand {
+  font-size: 21px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: #172033;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e8ecf1;
+}
+.app-sidebar .brand b { color: #4f8cff; }
+
+.app-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-sidebar nav a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #505767;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background .15s ease, color .15s ease;
+}
+
+.app-sidebar nav a:hover,
+.app-sidebar nav a.active {
+  background: #f0f3f7;
+  color: #172033;
+  font-weight: 700;
+}
+
+/* Minimal topbar: white bg, logo left, login/logout right */
+.app-topbar {
+  position: fixed;
+  top: 0; left: 240px; right: 0;
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #e8ecf1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 24px;
+  z-index: 100;
+}
+
+.app-topbar .btn-login {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: #2868dc;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background .2s ease;
+}
+.app-topbar .btn-login:hover { background: #1f56bc; }
+
+/* Main content shifts right for sidebar + topbar height */
+.layout-root main {
+  flex: 1 1 auto;
+  margin-top: 64px;
+  // margin-left: 240px; /* already set by flex parent; kept for clarity */
+  max-width: none;
+  padding: 28px 28px 28px 28px;
+  min-height: calc(100vh - 64px);
+}
+
+/* Responsive: collapse sidebar on narrow viewports, but the prompt asks for full layout */
+@media (max-width: 960px) {
+  .layout-root { flex-direction: column; }
+  .app-sidebar { flex: 0 0 auto; width: 100%; border-right: 0; border-bottom: 1px solid #e8ecf1; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  .app-topbar { left: 0; }
+  .layout-root main { margin-left: 0; }
+}

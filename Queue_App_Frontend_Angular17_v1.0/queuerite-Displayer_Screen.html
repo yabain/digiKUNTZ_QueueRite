@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QueueRite — Affichage des tickets</title>
+  <style>
+    :root {
+      --green: #91cc00;
+      --orange: #dd7608;
+      --green-dark: #7fb600;
+      --text: #171717;
+      --panel-bg: #f2f2f2;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .queue-screen {
+      display: grid;
+      grid-template-columns: 33.2% 66.8%;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Colonne de gauche : tickets en cours */
+    .ticket-sidebar {
+      display: grid;
+      grid-template-rows: auto repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 10px 13px;
+      background: var(--orange);
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .sidebar-title {
+      margin: 0;
+      align-self: center;
+      color: #fff;
+      font-size: clamp(14px, 1.55vw, 22px);
+      line-height: 1.15;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .ticket-card {
+      min-height: 0;
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-content: center;
+      padding: clamp(10px, 1.5vw, 22px) clamp(10px, 1.8vw, 25px);
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .ticket-number-row {
+      display: grid;
+      grid-template-columns: minmax(34px, .28fr) minmax(0, 1fr);
+      align-items: center;
+      column-gap: clamp(8px, 1vw, 16px);
+      width: 100%;
+      min-width: 0;
+      font-weight: 800;
+      line-height: .95;
+      letter-spacing: -1.5px;
+      font-size: clamp(34px, 6vw, 88px);
+      white-space: nowrap;
+    }
+
+    .ticket-number-row span:last-child {
+      text-align: right;
+      min-width: 0;
+    }
+
+    .ticket-label {
+      margin-top: 8px;
+      font-size: clamp(13px, 1.75vw, 25px);
+      line-height: 1.1;
+      font-weight: 800;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+
+    /* Partie droite : image, heure et bandeau inférieur */
+    .main-display {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto auto;
+      background: #fff;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 280px;
+      overflow: hidden;
+      background-image: url("../Pictures/653703039_3295204980639691_167693236848561135_n.jpg");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .clock {
+      position: absolute;
+      top: 18px;
+      right: 26px;
+      color: #fff;
+      font-size: clamp(24px, 3.2vw, 40px);
+      font-weight: 300;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 5px rgba(0,0,0,.18);
+    }
+
+    .brand-bar {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 17px 10px 20px;
+      background: #fff;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      position: relative;
+      width: 58px;
+      height: 40px;
+      flex: 0 0 auto;
+    }
+
+    .cloud {
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 42px;
+      height: 22px;
+      border: 3px solid #171717;
+      border-radius: 18px 18px 12px 12px;
+      background: #fff;
+    }
+
+    .cloud::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: -9px;
+      width: 19px;
+      height: 16px;
+      border: 3px solid #171717;
+      border-bottom: 0;
+      border-radius: 15px 15px 0 0;
+      background: #fff;
+    }
+
+    .people {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: flex-end;
+      gap: 1px;
+      z-index: 1;
+    }
+
+    .person {
+      width: 12px;
+      height: 17px;
+      position: relative;
+      border-radius: 7px 7px 2px 2px;
+      background: var(--green);
+      border: 1px solid #fff;
+    }
+
+    .person::before {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      left: 1px;
+      top: -7px;
+      border-radius: 50%;
+      background: #171717;
+    }
+
+    .person:nth-child(2) { height: 21px; background: #171717; }
+    .person:nth-child(3) { height: 15px; }
+
+    .brand-name {
+      font-size: clamp(18px, 2vw, 25px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -.8px;
+      white-space: nowrap;
+    }
+
+    .brand-name span { color: var(--green-dark); }
+
+    .brand-subtitle {
+      font-size: .48em;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .branch {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border-radius: 9px;
+      background: var(--green);
+      color: #fff;
+      font-size: clamp(14px, 1.8vw, 22px);
+      white-space: nowrap;
+    }
+
+    .footer-message {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      background: #eee;
+      text-align: center;
+      font-size: clamp(14px, 1.8vw, 22px);
+      line-height: 1.25;
+    }
+
+    @media (min-width: 1500px) {
+      .queue-screen { max-height: 100vh; }
+    }
+
+    @media (max-width: 700px) {
+      .queue-screen {
+        grid-template-columns: 38% 62%;
+        min-height: 100svh;
+      }
+      .ticket-sidebar { grid-template-rows: auto repeat(3, minmax(0, 1fr)); gap: 7px; padding: 8px 7px; }
+      .ticket-card { border-radius: 10px; padding: 9px 8px; }
+      .ticket-number-row { font-size: clamp(27px, 6vw, 54px); letter-spacing: -1px; grid-template-columns: minmax(24px, .28fr) minmax(0, 1fr); }
+      .ticket-label { font-size: clamp(10px, 2.4vw, 16px); margin-top: 7px; }
+      .hero { min-height: 220px; }
+      .brand-bar { min-height: 58px; padding: 8px; gap: 5px; }
+      .brand-mark { transform: scale(.75); transform-origin: left center; width: 45px; }
+      .brand { gap: 0; }
+      .brand-name { font-size: clamp(13px, 3vw, 18px); }
+      .branch { font-size: clamp(11px, 2.6vw, 15px); padding: 7px; }
+      .footer-message { font-size: clamp(11px, 2.6vw, 15px); min-height: 48px; }
+      .clock { top: 10px; right: 12px; }
+    }
+
+    @media (max-width: 420px) {
+      .queue-screen { grid-template-columns: 40% 60%; }
+      .ticket-number-row { font-size: 25px; }
+      .ticket-label { font-size: 10px; }
+      .brand-mark { display: none; }
+      .branch { white-space: normal; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <main class="queue-screen">
+    <aside class="ticket-sidebar" aria-label="Tickets actuellement appelés">
+      <h1 class="sidebar-title">NOW SERVING</h1>
+
+      <section class="ticket-card">
+        <div class="ticket-number-row"><span>1</span><span>1008</span></div>
+        <div class="ticket-label">EVALUATION</div>
+      </section>
+
+      <section class="ticket-card">
+        <div class="ticket-number-row"><span>2</span><span>2008</span></div>
+        <div class="ticket-label">PAYMENT</div>
+      </section>
+
+      <section class="ticket-card">
+        <div class="ticket-number-row"><span>3</span><span>3008</span></div>
+        <div class="ticket-label">RELEASING</div>
+      </section>
+    </aside>
+
+    <section class="main-display">
+      <div class="hero" role="img" aria-label="Image de vagues océaniques">
+        <time class="clock" id="clock">10:24</time>
+      </div>
+
+      <div class="brand-bar">
+        <div class="brand" aria-label="QueueRite Cloud">
+          <div class="brand-mark" aria-hidden="true">
+            <div class="cloud"></div>
+            <div class="people">
+              <span class="person"></span>
+              <span class="person"></span>
+              <span class="person"></span>
+            </div>
+          </div>
+          <div class="brand-name">QUEUE<span>RITE</span><br><small class="brand-subtitle">Cloud</small></div>
+        </div>
+        <div class="branch">Main Branch</div>
+      </div>
+
+      <footer class="footer-message">
+        QueueRite is a complete enterprise software system for customer queue management.
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    // Actualise l'heure automatiquement chaque minute.
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("clock").textContent =
+        now.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+    }
+    updateClock();
+    setInterval(updateClock, 60000);
+  </script>
+</body>
+</html>

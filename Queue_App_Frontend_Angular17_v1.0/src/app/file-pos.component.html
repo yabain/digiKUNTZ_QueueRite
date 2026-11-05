@@ -1,0 +1,62 @@
+<div class="pos-page" [style.backgroundColor]="'#f8f9fa'">
+  <img *ngIf="logoUrl" class="logo" [src]="logoUrl" (error)="onLogoError()" alt="Logo" />
+
+  <section class="main-content" aria-labelledby="pos-title">
+    <h1 id="pos-title" class="page-title">{{ queue?.name || ' ' }}</h1>
+    <button type="button" class="ticket-button" [style.backgroundColor]="primaryColor" (click)="generateTicket()"
+      [disabled]="generating" aria-label="Générer un ticket">
+      <span>Générer Ticket</span>
+      <span class="separator" aria-hidden="true"></span>
+      <span>Get ticket</span>
+    </button>
+    <br><br>
+
+    <div class="result-zone" *ngIf="displayNumber && displayNumber !== '---'">
+      <span class="ticket-label">Numéro</span>
+      <span class="ticket-number">{{ displayNumber }}</span>
+    </div>
+  </section>
+
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+
+  <footer class="footer-brand">
+    Copyright © 2026 <strong>digiKUNTZ</strong> Queue Rite. All Rights Reserved.
+  </footer>
+
+  <button class="settings-btn" type="button" aria-label="Paramètres" (click)="openSettings()">
+    <img src="assets/img/icons/settings_icon.png" alt="Paramètres" />
+  </button>
+
+  <div class="settings-modal" *ngIf="showSettings" role="dialog" aria-modal="true" aria-label="Paramètres">
+    <div class="settings-card">
+      <button class="close-btn" type="button" aria-label="Fermer" (click)="closeSettings()">✕</button>
+      <h2>Paramètres</h2>
+      <label for="api-url">Adresse du serveur</label>
+      <input id="api-url" type="text" [(ngModel)]="apiUrl" placeholder="http://SERVEUR:3000/api" />
+      <button class="btn-save" type="button" (click)="saveApiUrl()">Enregistrer</button>
+      <hr />
+      <button class="btn-quit" type="button" (click)="goHome()">Quitter POS</button>
+    </div>
+  </div>
+
+<div class="kiosk-modal" *ngIf="showKioskPrompt" role="dialog" aria-modal="true" aria-label="Mode borne">
+  <div class="kiosk-card">
+    <h3>Passer en mode Kiosk</h3>
+    <p>Voulez-vous ouvrir cette page en plein écran ?</p>
+    <div class="kiosk-actions">
+      <button class="btn-ghost" (click)="dismissKiosk()">Non</button>
+      <button class="btn-primary" (click)="confirmKiosk()">Oui</button>
+    </div>
+  </div>
+</div>
+
+<!-- Zone d'impression : invisible à l'écran, seule la zone imprimée (58 mm). -->
+<div class="print-zone" aria-hidden="true">
+  <ng-container *ngIf="printData">
+    <div class="print-number">{{ printData.number }}</div>
+    <div class="print-datetime">{{ printData.dateTime }}</div>
+    <div class="print-queuename">{{ printData.queueName }}</div>
+  </ng-container>
+</div>
+</div>

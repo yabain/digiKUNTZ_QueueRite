@@ -1,0 +1,168 @@
+<div class="dash" *ngIf="connected">
+  <header class="dash-head">
+    <div>
+      <span class="eyebrow">TABLEAU DE BORD</span>
+      <h1>Statistiques générales</h1>
+      <p>Suivi opérationnel de votre établissement · journée du {{ stats?.operationalDate || '—' }}</p>
+    </div>
+    <div class="dash-actions">
+      <span class="live"><i></i> Temps réel</span>
+      <button type="button" class="btn-refresh" (click)="refresh()" [disabled]="loading">
+        <span class="spinner" *ngIf="loading"></span>
+        {{ loading ? 'Actualisation…' : 'Actualiser' }}
+      </button>
+    </div>
+  </header>
+
+  <div class="dash-error" *ngIf="error">
+    <strong>Erreur</strong>
+    <span>{{ error }}</span>
+    <button type="button" (click)="refresh()">Réessayer</button>
+  </div>
+
+  <ng-container *ngIf="stats">
+    <section class="kpi-grid">
+      <article class="kpi kpi--blue">
+        <div class="kpi-top">
+          <span class="kpi-label">Files d'attente</span>
+          <span class="kpi-icon">F</span>
+        </div>
+        <strong class="kpi-value">{{ stats.queues.active }}</strong>
+        <span class="kpi-sub">{{ stats.queues.total }} file(s) au total</span>
+      </article>
+
+      <article class="kpi kpi--indigo">
+        <div class="kpi-top">
+          <span class="kpi-label">Postes de service</span>
+          <span class="kpi-icon">C</span>
+        </div>
+        <strong class="kpi-value">{{ stats.counters.active }}</strong>
+        <span class="kpi-sub">{{ stats.counters.total }} caisse(s) configurée(s)</span>
+      </article>
+
+      <article class="kpi kpi--teal">
+        <div class="kpi-top">
+          <span class="kpi-label">Tickets aujourd'hui</span>
+          <span class="kpi-icon">T</span>
+        </div>
+        <strong class="kpi-value">{{ stats.tickets.today }}</strong>
+        <span class="kpi-sub">{{ stats.tickets.total }} ticket(s) au total</span>
+      </article>
+
+      <article class="kpi kpi--amber">
+        <div class="kpi-top">
+          <span class="kpi-label">En attente</span>
+          <span class="kpi-icon">⏳</span>
+        </div>
+        <strong class="kpi-value">{{ stats.tickets.waiting }}</strong>
+        <span class="kpi-sub">dans les files actives</span>
+      </article>
+
+      <article class="kpi kpi--orange">
+        <div class="kpi-top">
+          <span class="kpi-label">Appelés</span>
+          <span class="kpi-icon">📣</span>
+        </div>
+        <strong class="kpi-value">{{ stats.tickets.called }}</strong>
+        <span class="kpi-sub">en cours d'appel</span>
+      </article>
+
+      <article class="kpi kpi--green">
+        <div class="kpi-top">
+          <span class="kpi-label">Terminés</span>
+          <span class="kpi-icon">✓</span>
+        </div>
+        <strong class="kpi-value">{{ stats.tickets.completed }}</strong>
+        <span class="kpi-sub">{{ stats.tickets.completionRate }}% de complétion</span>
+      </article>
+
+      <article class="kpi kpi--purple">
+        <div class="kpi-top">
+          <span class="kpi-label">Traités aujourd'hui</span>
+          <span class="kpi-icon">↗</span>
+        </div>
+        <strong class="kpi-value">{{ stats.tickets.processed }}</strong>
+        <span class="kpi-sub">appelés, servis ou clôturés</span>
+      </article>
+
+      <article class="kpi kpi--slate">
+        <div class="kpi-top">
+          <span class="kpi-label">Attente moyenne</span>
+          <span class="kpi-icon">◷</span>
+        </div>
+        <strong class="kpi-value">{{ formatDuration(stats.average.waitMs) }}</strong>
+        <span class="kpi-sub">avant appel du ticket</span>
+      </article>
+    </section>
+
+    <section class="dash-grid">
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Répartition par file</h2>
+          <span class="panel-hint">{{ stats.byQueue.length }} file(s) concernée(s)</span>
+        </div>
+
+        <ul class="queue-list" *ngIf="stats.byQueue.length; else noQueues">
+          <li *ngFor="let q of stats.byQueue">
+            <div class="queue-top">
+              <div class="queue-name">
+                <strong>{{ q.name }}</strong>
+                <span class="badge" [class.badge--off]="!q.active">{{ q.active ? 'Active' : 'Inactive' }}</span>
+              </div>
+              <span class="queue-total">{{ q.total }} ticket(s)</span>
+            </div>
+            <div class="bar" role="progressbar" [attr.aria-valuenow]="percent(q.completed, q.total)" aria-valuemin="0" aria-valuemax="100">
+              <span [style.width.%]="percent(q.completed, q.total)"></span>
+            </div>
+            <div class="queue-meta">
+              <span class="tag tag--wait">{{ q.waiting }} en attente</span>
+              <span class="tag tag--call">{{ q.called }} appelé(s)</span>
+              <span class="tag tag--done">{{ q.completed }} terminé(s)</span>
+            </div>
+          </li>
+        </ul>
+        <ng-template #noQueues>
+          <p class="empty">Aucun ticket enregistré aujourd'hui.</p>
+        </ng-template>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Derniers tickets</h2>
+          <a routerLink="/queues" class="panel-link">Voir les files</a>
+        </div>
+
+        <div class="table-wrap" *ngIf="stats.recentTickets.length; else noTickets">
+          <table>
+            <thead>
+              <tr>
+                <th>Ticket</th>
+                <th>File</th>
+                <th>État</th>
+                <th>Créé le</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of stats.recentTickets">
+                <td><strong class="ticket-number">{{ t.displayNumber }}</strong></td>
+                <td class="muted">{{ t.queueName }}</td>
+                <td>
+                  <span class="status" [ngClass]="'status--' + t.status">{{ statusLabel(t.status) }}</span>
+                </td>
+                <td class="muted">{{ t.createdAt | date:'dd/MM/yy HH:mm' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #noTickets>
+          <p class="empty">Aucun ticket pour le moment.</p>
+        </ng-template>
+      </article>
+    </section>
+  </ng-container>
+
+  <div class="dash-loading" *ngIf="loading && !stats">
+    <span class="spinner"></span>
+    Chargement des statistiques…
+  </div>
+</div>

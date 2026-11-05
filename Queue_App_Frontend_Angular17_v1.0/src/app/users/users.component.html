@@ -1,0 +1,49 @@
+<section class="users-page" aria-label="Utilisateurs">
+  <header class="page-head">
+    <div>
+      <p class="eyebrow">Backoffice</p>
+      <h1>Utilisateurs</h1>
+      <p class="subtitle">Gérer les comptes d'accès au tableau de bord et aux interfaces.</p>
+    </div>
+    <div class="head-actions">
+      <button type="button" (click)="load()" [disabled]="loading" class="btn-ghost">Actualiser</button>
+    </div>
+  </header>
+
+  <p class="alert error" *ngIf="error">{{ error }}</p>
+  <p class="alert success" *ngIf="message">{{ message }}</p>
+
+    <table class="bare table-wrap" aria-label="Liste des utilisateurs">
+      <thead>
+        <tr>
+          <th>Identifiant</th>
+          <th>Nom affiché</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Locale</th>
+          <th>État</th>
+          <th>Dernière connexion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="loading && rows.length === 0"><td colspan="7" class="text-center muted">Chargement…</td></tr>
+        <tr *ngFor="let u of paginated; trackBy: trackById">
+          <td class="monospace">{{ u.username }}</td>
+          <td><strong>{{ u.displayName || '—' }}</strong></td>
+          <td>{{ u.email || '—' }}</td>
+          <td><span class="badge" [ngClass]="roleClass(u.role)">{{ roleLabel(u.role) }}</span></td>
+          <td>{{ u.preferredLocale || 'fr' }}</td>
+          <td>
+            <span class="badge" [ngClass]="u.active ? 'badge--on' : 'badge--off'">{{ u.active ? 'Actif' : 'Inactif' }}</span>
+          </td>
+          <td class="muted">{{ u.lastLoginAt ? (u.lastLoginAt | date:'dd/MM/yy HH:mm') : '—' }}</td>
+        </tr>
+        <tr *ngIf="!loading && rows.length === 0"><td colspan="7" class="text-center muted">Aucun utilisateur.</td></tr>
+      </tbody>
+    </table>
+  <nav class="pagination" aria-label="Pagination" *ngIf="totalPages > 1">
+    <button class="btn-paginate" [disabled]="page <= 1" (click)="go(page - 1)">← Précédent</button>
+    <span class="paginate-info">Page {{ page }} / {{ totalPages }}</span>
+    <button class="btn-paginate" [disabled]="page >= totalPages" (click)="go(page + 1)">Suivant →</button>
+  </nav>
+</section>

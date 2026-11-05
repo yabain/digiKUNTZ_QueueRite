@@ -1,0 +1,54 @@
+<section class="file-list">
+  <header class="page-head">
+    <div>
+      <!-- <p class="eyebrow">Backoffice</p> -->
+      <h1>Files d'attente</h1>
+      <p class="subtitle">Créez une file ou ouvrez son édition complète.</p>
+    </div>
+    <div class="head-actions">
+      <a routerLink="/dashboard" class="btn ghost">Tableau de bord</a>
+      <a routerLink="/queues/new" class="btn primary"><button class="btn"> + Nouvelle file</button></a>
+    </div>
+  </header>
+
+  <p class="alert error" *ngIf="error">{{ error }}</p>
+  <p class="alert success" *ngIf="message">{{ message }}</p>
+
+  <div class="panel table-panel">
+    <p class="muted" *ngIf="loading">Chargement des files…</p>
+    <p class="muted" *ngIf="!loading && !files.length">Aucune file pour le moment.</p>
+
+    <table *ngIf="!loading && files.length">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Code</th>
+          <th>Statut</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let f of files; trackBy: trackById">
+          <td (click)="open(f)"><strong>{{ f.name }}</strong></td>
+          <td (click)="open(f)"><span class="code">{{ f.code }}</span></td>
+          <td (click)="open(f)">
+            <span class="status" [class.off]="!f.active">
+              {{ f.active ? 'Actif' : 'Désactivé' }}
+            </span>
+          </td>
+          <td>
+            <div class="actions">
+              <button type="button" class="btn small ghost" (click)="navigateByUrl('/file/' + f._id + '/pos')">POS</button>
+              <button type="button" class="btn small ghost" (click)="navigateByUrl('/displays/' + f._id)">Ecran</button>
+              <button type="button" class="btn small primary" (click)="edit(f)">Éditer</button>
+              <button type="button" class="btn small ghost" (click)="toggle(f)">
+                {{ f.active ? 'Désactiver' : 'Activer' }}
+              </button>
+              <button type="button" class="btn small danger" (click)="remove(f)">Supprimer</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

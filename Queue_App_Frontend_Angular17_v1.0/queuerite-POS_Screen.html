@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DigiKUNTZ Queue Rite - Caisse</title>
+<style>
+*{box-sizing:border-box}
+html,body{width:100%;min-height:100%;margin:0}
+body{min-height:100vh;overflow:hidden;background:#fff;color:#080808;font-family:Arial,Helvetica,sans-serif}
+.page{position:relative;display:flex;flex-direction:column;align-items:center;width:100%;min-height:100vh;padding:9.2vh 20px 0}
+.hospital-logo{display:block;width:330px;height:155px;object-fit:contain;object-position:center}
+.main-content{position:absolute;top:43.3%;left:50%;display:flex;flex-direction:column;align-items:center;width:min(100% - 32px,520px);transform:translateX(-50%)}
+.page-title{margin:0 0 40px;font-size:28px;line-height:1.2;font-weight:700;text-align:center}
+.ticket-button{display:flex;flex-direction:column;align-items:center;justify-content:center;width:471px;max-width:100%;min-height:150px;padding:10px 18px;border:0;border-radius:27px;background:#f58225;color:#fff;text-decoration:none;text-align:center;font-size:49px;line-height:1.13;font-weight:800;cursor:pointer}
+.ticket-button .separator{display:block;width:112px;height:5px;margin:7px 0 5px;background:#fff}
+.footer-brand{position:absolute;bottom:10px;left:50%;display:flex;align-items:center;justify-content:center;gap:17px;transform:translateX(-50%);white-space:nowrap}
+.footer-brand strong{font-size:29px;font-weight:900;letter-spacing:-1.2px}
+.footer-brand span{font-family:"Courier New",Courier,monospace;font-size:25px;letter-spacing:1px}
+.settings-button{position:absolute;right:39px;bottom:0;display:flex;align-items:center;justify-content:center;width:60px;height:60px;padding:5px;border:0;background:transparent;cursor:pointer}
+.settings-button img{display:block;width:52px;height:52px;object-fit:contain}
+@media(max-width:600px){
+.page{padding-top:8vh}
+.hospital-logo{width:min(280px,78vw);height:135px}
+.main-content{top:42%}
+.page-title{margin-bottom:30px;font-size:24px}
+.ticket-button{min-height:125px;border-radius:23px;font-size:clamp(31px,8vw,43px)}
+.ticket-button .separator{width:90px;height:4px;margin:5px 0}
+.footer-brand{bottom:15px;gap:9px}
+.footer-brand strong{font-size:21px}
+.footer-brand span{font-size:17px}
+.settings-button{right:8px;bottom:4px;width:43px;height:43px}
+.settings-button img{width:36px;height:36px}
+}
+@media(max-width:380px){
+.footer-brand{left:42%}
+.footer-brand strong{font-size:18px}
+.footer-brand span{font-size:15px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- Remplacez ce chemin par l'URL ou le chemin local du logo -->
+  <img class="hospital-logo" src="assets/logo-hopital.png" alt="Hôpital Général de Douala">
+
+  <main class="main-content">
+    <h1 class="page-title">Caisse</h1>
+    <a class="ticket-button" href="#" aria-label="Générer un ticket">
+      <span>Générer Ticket</span>
+      <span class="separator" aria-hidden="true"></span>
+      <span>Get ticket</span>
+    </a>
+  </main>
+
+  <footer class="footer-brand">
+    <strong>digiKUNTZ</strong>
+    <span>Queue Rite</span>
+  </footer>
+
+  <!-- Remplacez ce chemin par l'URL ou le chemin local de l'icône -->
+  <button class="settings-button" type="button" aria-label="Paramètres">
+    <img src="assets/settings.png" alt="Settings">
+  </button>
+</div>
+</body>
+</html>

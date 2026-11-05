@@ -1,0 +1,50 @@
+<section class="counter-list">
+  <header class="page-head">
+    <div>
+      <!-- <p class="eyebrow">Backoffice</p> -->
+      <h1>Postes de service</h1>
+      <p class="subtitle">Configurez les postes de service (login/mot-de-passe) associées à une file.</p>
+    </div>
+    <div class="head-actions">
+      <a routerLink="/counters/new" class="btn primary">Nouvelle caisse</a>
+    </div>
+  </header>
+
+  <p class="alert error" *ngIf="error">{{ error }}</p>
+  <p class="alert success" *ngIf="message">{{ message }}</p>
+
+  <div class="panel table-panel">
+    <p class="muted" *ngIf="loading">Chargement des caisses…</p>
+    <p class="muted" *ngIf="!loading && counters.length === 0">Aucune caisse configurée.</p>
+
+    <table *ngIf="!loading && counters.length > 0">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>File</th>
+          <th>Login</th>
+          <th>État</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of counters; trackBy: trackById">
+          <td>{{ c.name }}</td>
+          <td>{{ queueName(c) }}</td>
+          <td class="monospace">{{ c.username }}</td>
+          <td>
+            <span [class.off]="!c.active">{{ c.active ? 'Active' : 'Désactivée' }}</span>
+          </td>
+          <td class="actions">
+            <button type="button" class="btn small ghost" (click)="edit(c)">Modifier</button>
+            <button type="button" class="btn small ghost" (click)="open(c)">Ouvrir</button>
+            <button type="button" class="btn small ghost" (click)="toggle(c)">
+              {{ c.active ? 'Désactiver' : 'Activer' }}
+            </button>
+            <button type="button" class="btn small danger" (click)="remove(c)">Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

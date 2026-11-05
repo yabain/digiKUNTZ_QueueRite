@@ -1,0 +1,69 @@
+.counter-list {
+  // max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 32px;
+}
+
+.table-panel .panel {
+  padding: 0;
+}
+
+.table-panel .table-wrap {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #eceef2;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(23, 32, 51, .04);
+}
+
+.table-panel table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13.5px;
+  color: #334155;
+}
+
+.table-panel th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eceef2;
+  position: sticky;
+  top: 0;
+}
+
+.table-panel td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.table-panel tbody tr:hover td {
+  background: #f8fafc;
+}
+
+.table-panel tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table-panel .monospace {
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: 12.5px;
+  color: #475569;
+}
+
+@media (max-width: 760px) {
+  .counter-list {
+    padding: 16px;
+  }
+}
+
+.btn{
+  margin: 5px;
+}

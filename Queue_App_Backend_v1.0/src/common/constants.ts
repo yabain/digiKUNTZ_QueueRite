@@ -1,0 +1,2 @@
+export const ENTITY_NAMES=['establishments','users','roles','permissions','queues','counters','agentAssignments','devices','displays','mediaAssets','playlists','announcements','auditLogs','licenses','printJobs','backupRecords','appSettings','operationalDays','idempotencyRecords','outboxEvents','ticketEvents'];
+export const ROLES=['super_admin','admin','supervisor','agent','technician','display','kiosk'];

@@ -1,0 +1,22 @@
+
+    <div class="config-page">
+      <h2>Configuration graphique — File</h2>
+      <form (ngSubmit)="save()">
+        <label>Couleur primaire <input type="color" [(ngModel)]="primaryColor" name="primaryColor" /></label>
+        <label>Couleur secondaire <input type="color" [(ngModel)]="secondaryColor" name="secondaryColor" /></label>
+        <label>Logo URL <input [(ngModel)]="logoUrl" name="logoUrl" /></label>
+        <label>Image de garde URL <input [(ngModel)]="guardImageUrl" name="guardImageUrl" /></label>
+        <label>Vitesse messages (1-10) <input type="number" min="1" max="10" [(ngModel)]="messageSpeed" name="messageSpeed" /></label>
+        <label>Séparateur
+          <select [(ngModel)]="separator" name="separator">
+            <option value="*">Étoile</option>
+            <option value="-">Tiret</option>
+            <option value="|">Pipe</option>
+          </select>
+        </label>
+        <h3>Messages d'annonce</h3>
+        <textarea [(ngModel)]="messages" name="messages" rows="4" placeholder="Un message par ligne"></textarea>
+        <button type="submit">Enregistrer</button>
+      </form>
+    </div>
+  

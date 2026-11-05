@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f8fafc;color:#172033;font-family:'DM Sans',Arial,sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+
+/* === Clean card system === */
+.panel-card{background:#fff;border:1px solid #eceef2;border-radius:16px;padding:28px;box-shadow:0 1px 3px rgba(23,32,51,.06),0 4px 16px rgba(23,32,51,.03);transition:box-shadow .2s ease,transform .2s ease}
+.panel-card:hover{box-shadow:0 4px 16px rgba(23,32,51,.08),0 2px 6px rgba(23,32,51,.06)}
+
+/* === Typography scale === */
+h1{font-size:28px;letter-spacing:-0.65px;font-weight:700;color:#172033;margin:0 0 8px;line-height:1.15}
+h2{font-size:18px;font-weight:600;color:#172033;margin:0 0 14px;letter-spacing:-0.3px}
+p{color:#475569;font-size:14px;margin:0 0 12px}
+
+/* === Backoffice page header === */
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:28px;flex-wrap:wrap}
+.page-head h1{font-size:32px;letter-spacing:-1px}
+.eyebrow{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;display:block}
+.subtitle{color:#64748b;font-size:14px;margin-top:2px}
+.head-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* === Tables === */
+.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid #eceef2;background:#fff;box-shadow:0 1px 3px rgba(23,32,51,.04)}
+table.bare{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;color:#334155}
+table.bare th{font-weight:600;color:#475569;font-size:11px;text-transform:uppercase;letter-spacing:.4px;padding:12px 16px;text-align:left;background:#f8fafc;border-bottom:1px solid #eceef2;position:sticky;top:0}
+table.bare td{padding:14px 16px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+table.bare tbody tr:hover td{background:#f8fafc}
+table.bare tbody tr:last-child td{border-bottom:0}
+
+/* === Status badges === */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:9999px;font-size:11px;font-weight:600;border:1px solid transparent}
+.badge--on{background:#ecfdf3;color:#166534;border-color:#bbf7d0}
+.badge--off{background:#fff1f2;color:#9f1239;border-color:#fecdd3}
+.badge--wait{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+.badge--call{background:#eff6ff;color:#1e40af;border-color:#bfdbfe}
+.badge--done{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
+
+/* === Buttons === */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border:0;border-radius:10px;font-weight:600;font-size:13.5px;cursor:pointer;transition:all .15s ease;text-decoration:none}
+.btn-primary{background:#2b6cb0;color:#fff;box-shadow:0 1px 3px rgba(43,108,176,.25)}
+.btn-primary:hover{background:#1f5285;box-shadow:0 2px 6px rgba(43,108,176,.3)}
+.btn-ghost{background:#fff;color:#334155;border:1px solid #dde3ec}
+.btn-ghost:hover{background:#f8fafc;border-color:#c7d2db;color:#172033}
+.btn-small{padding:6px 12px;font-size:12.5px}
+
+/* === Responsive === */
+@media (max-width: 1024px) {
+  .page-head { flex-direction: column; align-items: flex-start; }
+  h1 { font-size: 24px; }
+}

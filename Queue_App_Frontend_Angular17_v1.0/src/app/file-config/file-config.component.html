@@ -1,0 +1,437 @@
+<section class="state" *ngIf="loading">
+  <span class="spinner"></span>
+  Chargement de la configuration…
+</section>
+
+<section class="state error" *ngIf="!loading && !queue">
+  <p>{{ error || 'Cette file est introuvable.' }}</p>
+  <a routerLink="/queues" class="btn ghost">Retour aux files</a>
+</section>
+
+<section class="config-page" *ngIf="!loading && queue">
+  <header class="page-head">
+    <div>
+      <p class="eyebrow">
+        {{ isCreate ? 'Création d’une file' : 'Édition de la file' }}
+      </p>
+      <h1>{{ isCreate ? 'Nouvelle file' : queue.name }}</h1>
+      <p class="subtitle" *ngIf="!isCreate">
+        <span class="code">{{ queue.code }}</span>
+        Informations de la file, couleurs, messages et médias de l’écran public.
+      </p>
+      <p class="subtitle" *ngIf="isCreate">
+        Renseignez les informations de la file et la configuration de son écran public.
+      </p>
+    </div>
+    <div class="head-actions">
+      <button type="button" class="btn ghost" (click)="cancel()">← Retour</button>
+      <button
+        type="button"
+        class="btn primary"
+        (click)="save()"
+        [disabled]="!isValid() || saving"
+      >
+        {{
+          saving
+            ? (isCreate ? 'Création…' : 'Enregistrement…')
+            : (isCreate ? 'Créer la file' : 'Enregistrer')
+        }}
+      </button>
+    </div>
+  </header>
+
+  <p class="alert error" *ngIf="error">{{ error }}</p>
+  <p class="alert success" *ngIf="success">{{ success }}</p>
+
+  <div class="config-grid">
+    <div class="config-main">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Informations de la file</h2>
+          <span class="hint">Les champs marqués * sont obligatoires</span>
+        </div>
+
+        <div class="meta-grid">
+          <label>
+            Nom *
+            <input
+              name="name"
+              [(ngModel)]="name"
+              maxlength="120"
+              placeholder="Ex. Accueil"
+              required
+            />
+          </label>
+          <label>
+            Code *
+            <input
+              name="code"
+              [(ngModel)]="code"
+              maxlength="32"
+              placeholder="Ex. ACC"
+              required
+            />
+          </label>
+          <label>
+            Préfixe des tickets
+            <input
+              name="prefix"
+              [(ngModel)]="prefix"
+              maxlength="8"
+              placeholder="Ex. A"
+            />
+          </label>
+          <label>
+            Zone
+            <input
+              name="zone"
+              [(ngModel)]="zone"
+              maxlength="80"
+              placeholder="Ex. Rez-de-chaussée"
+            />
+          </label>
+          <label>
+            Priorité
+            <input
+              type="number"
+              name="priority"
+              [(ngModel)]="priority"
+              min="0"
+              max="9999"
+              step="1"
+            />
+          </label>
+          <label class="active-field">
+            <input type="checkbox" name="active" [(ngModel)]="active" />
+            File active
+          </label>
+        </div>
+
+        <label class="description-field">
+          Description
+          <textarea
+            name="description"
+            [(ngModel)]="description"
+            maxlength="500"
+            rows="3"
+            placeholder="Description interne de la file (facultatif)"
+          ></textarea>
+        </label>
+
+        <small class="field-error" *ngIf="!name.trim() || name.trim().length > 120">
+          Le nom est obligatoire (120 caractères maximum).
+        </small>
+        <small class="field-error" *ngIf="!code.trim() || code.trim().length > 32">
+          Le code est obligatoire (32 caractères maximum).
+        </small>
+        <small class="field-error" *ngIf="description.length > 500">
+          La description ne peut pas dépasser 500 caractères.
+        </small>
+        <small class="field-error" *ngIf="prefix.length > 8">
+          Le préfixe ne peut pas dépasser 8 caractères.
+        </small>
+        <small class="field-error" *ngIf="zone.length > 80">
+          La zone ne peut pas dépasser 80 caractères.
+        </small>
+        <small
+          class="field-error"
+          *ngIf="
+            !isPriorityValid()
+          "
+        >
+          La priorité doit être un entier entre 0 et 9999.
+        </small>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Couleurs</h2>
+          <span class="hint">Format hexadécimal #RRGGBB</span>
+        </div>
+
+        <div class="colors">
+          <label class="color-field">
+            <span class="field-label">Couleur primaire</span>
+            <div class="color-row">
+              <input
+                type="color"
+                name="primaryColor"
+                [(ngModel)]="primaryColor"
+                aria-label="Couleur primaire"
+              />
+              <input
+                class="hex"
+                name="primaryHex"
+                [(ngModel)]="primaryColor"
+                maxlength="7"
+                spellcheck="false"
+                aria-label="Code hexadécimal de la couleur primaire"
+              />
+            </div>
+            <small class="hint">Fond de la liste des caisses.</small>
+            <small class="field-error" *ngIf="!isHex(primaryColor)">
+              Format attendu : #RRGGBB
+            </small>
+          </label>
+
+          <label class="color-field">
+            <span class="field-label">Couleur secondaire</span>
+            <div class="color-row">
+              <input
+                type="color"
+                name="secondaryColor"
+                [(ngModel)]="secondaryColor"
+                aria-label="Couleur secondaire"
+              />
+              <input
+                class="hex"
+                name="secondaryHex"
+                [(ngModel)]="secondaryColor"
+                maxlength="7"
+                spellcheck="false"
+                aria-label="Code hexadécimal de la couleur secondaire"
+              />
+            </div>
+            <small class="hint">Fond de la bande de messages.</small>
+            <small class="field-error" *ngIf="!isHex(secondaryColor)">
+              Format attendu : #RRGGBB
+            </small>
+          </label>
+        </div>
+
+        <div class="screen-preview" aria-hidden="true">
+          <div
+            class="preview-sidebar"
+            [style.background]="isHex(primaryColor) ? primaryColor : '#91cc00'"
+          >
+            <span class="preview-label">Caisses</span>
+            <div class="preview-card">C01</div>
+            <div class="preview-card">C02</div>
+          </div>
+          <div class="preview-main">
+            <div class="preview-media">Média</div>
+          </div>
+          <div
+            class="preview-ticker"
+            [style.background]="isHex(secondaryColor) ? secondaryColor : '#eeeeee'"
+            [style.color]="messageColor === 'white' ? '#ffffff' : '#000000'"
+          >
+            <ng-container *ngIf="previewMessages.length; else noMessages">
+              <span class="preview-message" *ngFor="let message of previewMessages">
+                {{ message }} <b class="preview-sep">{{ separator }}</b>
+              </span>
+            </ng-container>
+            <ng-template #noMessages>
+              <span class="preview-empty">Aucun message</span>
+            </ng-template>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Messages défilants</h2>
+          <button
+            type="button"
+            class="btn small ghost"
+            (click)="addMessage()"
+            [disabled]="messages.length >= 50"
+          >
+            + Ajouter un message
+          </button>
+        </div>
+
+        <p class="muted" *ngIf="!messages.length">
+          Aucun message. Ajoutez-en un pour alimenter la bande défilante.
+        </p>
+
+        <div class="message-list">
+          <div
+            class="message-row"
+            *ngFor="let message of messages; let i = index; trackBy: trackByIndex"
+          >
+            <span class="message-index">{{ i + 1 }}</span>
+            <input
+              [attr.name]="'message' + i"
+              [(ngModel)]="messages[i]"
+              maxlength="200"
+              placeholder="Texte du message"
+              aria-label="Message défilant"
+            />
+            <button
+              type="button"
+              class="icon-btn danger"
+              (click)="removeMessage(i)"
+              title="Supprimer le message"
+              aria-label="Supprimer le message"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <div class="message-options">
+          <label>
+            Couleur du message
+            <select name="messageColor" [(ngModel)]="messageColor">
+              <option value="black">Noir</option>
+              <option value="white">Blanc</option>
+            </select>
+          </label>
+          <label>
+            Séparateur
+            <select name="separator" [(ngModel)]="separator">
+              <option *ngFor="let option of separatorOptions" [ngValue]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+          </label>
+        </div>
+
+        <small class="field-error" *ngIf="!separator || separator.length > 3">
+          Le séparateur doit contenir 1 à 3 caractères.
+        </small>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Logo</h2>
+          <span *ngIf="logo" class="hint">Importé</span>
+        </div>
+        <p class="muted">Logo affiché dans la charte graphique et récupéré par les interfaces.</p>
+        <div class="media-grid single">
+          <article class="media-card" *ngIf="logo; else noLogo" style="min-width: 120px; max-width: 200px;">
+            <div class="media-preview">
+              <img [src]="mediaUrl(logo)" [alt]="logo.name" loading="lazy" />
+            </div>
+            <div class="media-meta">
+              <span>{{ logo.name }}</span>
+              <button type="button" class="btn small danger" (click)="removeLogo()">Supprimer</button>
+            </div>
+          </article>
+          <ng-template #noLogo>
+            <label class="upload-label">
+              <input type="file" accept="image/*" (change)="onLogoFileSelected($event)" hidden />
+              <span class="btn ghost">Importer un logo</span>
+            </label>
+          </ng-template>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Médias</h2>
+          <span class="counter">{{ media.length }} / {{ maxMedia }}</span>
+        </div>
+        <p class="muted">
+          Images ou vidéos diffusées en boucle sur l’écran. Maximum {{ maxMedia }} fichiers
+          (100 Mo max par fichier).
+        </p>
+
+        <div class="media-grid">
+          <article
+            class="media-card"
+            *ngFor="let item of media; let i = index; trackBy: trackMedia"
+          >
+            <div class="media-preview">
+              <img
+                *ngIf="item.type === 'image'"
+                [src]="mediaUrl(item)"
+                [alt]="item.name"
+                loading="lazy"
+              />
+              <video
+                *ngIf="item.type === 'video'"
+                [src]="mediaUrl(item)"
+                [muted]="true"
+                loop
+                autoplay
+                playsinline
+              ></video>
+              <span class="media-type">{{ item.type === 'video' ? 'Vidéo' : 'Image' }}</span>
+            </div>
+            <div class="media-meta">
+              <strong [title]="item.name">{{ item.name }}</strong>
+              <button
+                type="button"
+                class="icon-btn danger"
+                (click)="removeMedia(i)"
+                title="Retirer ce média"
+                aria-label="Retirer ce média"
+              >
+                ✕
+              </button>
+            </div>
+          </article>
+
+          <label class="media-add" *ngIf="media.length < maxMedia" [class.disabled]="uploading">
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/ogg"
+              (change)="onFileSelected($event)"
+              [disabled]="uploading"
+            />
+            <span class="plus">{{ uploading ? '…' : '+' }}</span>
+            <span>{{ uploading ? 'Import en cours…' : 'Ajouter un média' }}</span>
+          </label>
+        </div>
+
+        <small class="field-error" *ngIf="media.length >= maxMedia">
+          Limite de {{ maxMedia }} médias atteinte.
+        </small>
+      </section>
+    </div>
+
+    <aside class="config-aside">
+      <section class="panel summary">
+        <h2>Résumé</h2>
+        <dl>
+          <div>
+            <dt>Nom</dt>
+            <dd>{{ name || '—' }}</dd>
+          </div>
+          <div>
+            <dt>Code</dt>
+            <dd>{{ code || '—' }}</dd>
+          </div>
+          <div>
+            <dt>Statut</dt>
+            <dd>{{ active ? 'Active' : 'Désactivée' }}</dd>
+          </div>
+          <div>
+            <dt>Couleur primaire</dt>
+            <dd>
+              <span
+                class="swatch"
+                [style.background]="isHex(primaryColor) ? primaryColor : '#91cc00'"
+              ></span>
+              {{ primaryColor }}
+            </dd>
+          </div>
+          <div>
+            <dt>Couleur secondaire</dt>
+            <dd>
+              <span
+                class="swatch"
+                [style.background]="isHex(secondaryColor) ? secondaryColor : '#eeeeee'"
+              ></span>
+              {{ secondaryColor }}
+            </dd>
+          </div>
+          <div>
+            <dt>Messages</dt>
+            <dd>{{ previewMessages.length }}</dd>
+          </div>
+          <div>
+            <dt>Médias</dt>
+            <dd>{{ media.length }} / {{ maxMedia }}</dd>
+          </div>
+        </dl>
+        <p class="hint">
+          L’écran public actualise ses données toutes les 2 secondes. Les modifications sont
+          visibles dès l’enregistrement.
+        </p>
+      </section>
+    </aside>
+  </div>
+</section>

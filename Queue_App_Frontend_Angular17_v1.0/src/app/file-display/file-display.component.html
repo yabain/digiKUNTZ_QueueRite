@@ -1,0 +1,96 @@
+<div class="queue-screen" *ngIf="queueId && !notFound; else noQueue">
+  <aside
+    class="ticket-sidebar"
+    aria-label="Tickets actuellement appelés"
+    aria-live="polite"
+    [style.background]="primaryColor"
+    [style.grid-template-rows]="'auto repeat(' + rowCount + ', minmax(0, 1fr))'"
+  >
+    <h1 class="sidebar-title">{{ queue?.name || 'QueueRite' }}</h1>
+
+    <section
+      class="ticket-card casse-card"
+      *ngFor="let c of caisses; let i = index; trackBy: trackByIndex"
+      [class.is-white]="c.active && c.online !== false && !!c.currentTicket"
+      [class.is-broken-primary]="c.active && c.online !== false && (!c.currentTicket || c.pausedByCashier)"
+      [class.is-red]="!c.active || c.online === false"
+    >
+      <div class="ticket-number-row">
+        <span>{{ i + 1 }}</span>
+        <span>{{ c.currentTicket?.displayNumber || '---' }}</span>
+      </div>
+      <div class="ticket-label">{{ c.name }}</div>
+    </section>
+  </aside>
+
+  <section class="main-display">
+    <div class="hero" role="img" [attr.aria-label]="'Média de la file ' + (queue?.name || '')">
+      <video
+        *ngIf="isVideo"
+        class="hero-media"
+        [src]="activeMedia.url"
+        autoplay
+        [muted]="true"
+        [loop]="mediaItems.length === 1"
+        playsinline
+        preload="auto"
+        (ended)="onMediaEnded()"
+        (error)="onMediaError()"
+      ></video>
+      <img
+        *ngIf="!isVideo"
+        class="hero-media"
+        [src]="activeMedia.url"
+        alt=""
+        (error)="onMediaError()"
+      />
+      <time class="clock">{{ clock }}</time>
+    </div>
+
+
+    <div class="brand-bar">
+      <div class="brand" aria-label="QueueRite Cloud">
+        <!-- <img class="brand-mark" src="assets/img/icons/logo_dk_queurite_0.png" alt="QueueRite" /> -->
+        <img *ngIf="logoUrl" class="logo" [src]="logoUrl" (error)="onLogoError()" alt="Logo" />
+      </div>
+      <div class="brand" aria-label="QueueRite Cloud">
+        <div class="brand-name">
+        <img class="logo" src="assets/img/icons/logo_dk_queurite_00.png" alt="QueueRite" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer
+    class="footer-message"
+    *ngIf="messages.length"
+    aria-label="Message d'information"
+    [style.background]="secondaryColor"
+    [style.color]="messageColorValue"
+  >
+    <span class="sr-only">{{ messages.join(' ') }}</span>
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-group" *ngFor="let copy of tickerCopies">
+        <span class="ticker-item" *ngFor="let message of messages">
+          {{ message }} <b class="sep">{{ separator }}</b>
+        </span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<ng-template #noQueue>
+  <div class="no-queue">
+    <h1>Queue<span>Rite</span></h1>
+    <p>{{ notFound ? 'File introuvable ou inactive.' : 'Aucune file sélectionnée.' }}</p>
+    <a routerLink="/">Retour à l'accueil</a>
+  </div>
+</ng-template>
+<div class="kiosk-modal" *ngIf="showKioskPrompt" role="dialog" aria-modal="true" aria-label="Mode borne">
+  <div class="kiosk-card">
+    <h3>Passer en mode Kiosk</h3>
+    <p>Voulez-vous ouvrir cette page en plein écran ?</p>
+    <div class="kiosk-actions">
+      <button class="btn-ghost" (click)="dismissKiosk()">Non</button>
+      <button class="btn-primary" (click)="confirmKiosk()">Oui</button>
+    </div>

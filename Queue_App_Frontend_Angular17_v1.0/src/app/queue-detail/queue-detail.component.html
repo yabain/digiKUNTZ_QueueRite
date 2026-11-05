@@ -1,0 +1,56 @@
+<div class="queue-detail">
+  <header class="heading">
+    <div>
+      <small>FILE</small>
+      <h1>{{ queue?.name || 'File' }}</h1>
+    </div>
+    <a routerLink="/queues" class="back">← Retour aux files</a>
+  </header>
+
+  <section class="panel display-link">
+    <h2>Écran public</h2>
+    <p>
+      Les couleurs, les messages défilants et les médias (3 maximum) sont configurés
+      depuis la page dédiée à l’écran de cette file.
+    </p>
+    <button type="button" (click)="editDisplay()">Configurer l’écran</button>
+  </section>
+
+  <section class="panel">
+    <h2>Statistiques</h2>
+    <div class="tabs">
+      <button type="button" [class.active]="tab === '24h'" (click)="tab = '24h'">24h</button>
+      <button type="button" [class.active]="tab === '7j'" (click)="tab = '7j'">7j</button>
+      <button type="button" [class.active]="tab === '30j'" (click)="tab = '30j'">30j</button>
+      <button type="button" [class.active]="tab === '12Mois'" (click)="tab = '12Mois'">12Mois</button>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Tickets</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stat of stats">
+          <td>{{ stat.date }}</td>
+          <td>{{ stat.tickets }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>Postes (Caisses)</h2>
+    <table>
+      <thead>
+        <tr><th>Nom</th><th>Login</th><th>Pass</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let counter of counters">
+          <td>{{ counter.name }}</td>
+          <td>{{ counter.username }}</td>
+          <td>***</td>
+          <td><button type="button" (click)="openCaller(counter)">Ouvrir caisse</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>

@@ -1,0 +1,57 @@
+{
+  "name": "queue-app-kiosk",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ng serve --host 0.0.0.0",
+    "build": "ng build --configuration production",
+    "electron:dev": "npm run build && electron electron/main.cjs",
+    "electron:build:win": "npm run build && electron-builder --win nsis --x64"
+  },
+  "dependencies": {
+    "@angular/common": "^17.3.12",
+    "@angular/compiler": "^17.3.12",
+    "@angular/core": "^17.3.12",
+    "@angular/forms": "^17.3.12",
+    "@angular/platform-browser": "^17.3.12",
+    "@angular/platform-browser-dynamic": "^17.3.12",
+    "@ionic/angular": "^7.8.6",
+    "ionicons": "^7.4.0",
+    "rxjs": "~7.8.1",
+    "tslib": "^2.6.2",
+    "zone.js": "~0.14.10"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.3.12",
+    "@angular/cli": "^17.3.12",
+    "@angular/compiler-cli": "^17.3.12",
+    "@capacitor/cli": "^6.1.2",
+    "electron": "^31.7.7",
+    "electron-builder": "^25.1.8",
+    "typescript": "~5.4.5"
+  },
+  "build": {
+    "appId": "com.queueapp.kiosk",
+    "productName": "Queue App Kiosk",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "www/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "Queue-App-Kiosk-${version}-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  },
+  "main": "electron/main.cjs"
+}

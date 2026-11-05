@@ -1,0 +1,53 @@
+<div class="home-hero">
+  <div class="dark-calque"></div>
+  <div class="container">
+    <h1 class="brand-logo">
+      <img src="assets/img/icons/logo_dk_queurite.png" alt="Queue App" />
+    </h1>
+    <p class="slogan">Votre système de gestion de file d'attente</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;">
+      <button (click)="openModal('pos')" class="btn-home">POS</button>
+      <button (click)="openModal('ecran')" class="btn-home">Écran</button>
+      <a routerLink="/login" class="btn-home">Se connecter</a>
+    </div>
+      <button type="button" (click)="openSettings()" class="btn-home" aria-label="Paramètres">
+        <img src="../../assets/img/icons/settings_icon.png" alt="" style="width: 40px;">
+      </button>
+    <div class="partenaires">
+      <div class="title">Il nous font confiance</div>
+      <div class="partners-marquee">
+        <div class="partners-track">
+          <div class="partners-group" *ngFor="let copy of partnerCopies">
+            <img *ngFor="let logo of partnerLogos" class="partner-logo" [src]="logo.src"
+              [alt]="copy === 0 ? logo.alt : ''" [attr.aria-hidden]="copy === 0 ? null : 'true'" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="showModal"
+  style="position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:50;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;padding:2rem;border-radius:16px;max-width:500px;width:90%;text-align:center;">
+    <h2>Choisissez la file ({{modalType==='pos'?'POS':'Écran'}})</h2>
+    <ul style="list-style:none;padding:0;">
+      <li *ngFor="let f of files" style="margin:0.5rem 0;">
+        <button (click)="selectFile(f)"
+          style="padding:0.75rem 1.5rem;background:#1a1a2e;color:#fff;border:none;border-radius:50px;cursor:pointer;width:100%;font-weight:600;">{{f.name}}</button>
+      </li>
+    </ul>
+    <button (click)="showModal=false"
+      style="margin-top:1rem;padding:0.5rem 1rem;background:#ccc;border:none;border-radius:8px;cursor:pointer;">Annuler</button>
+  </div>
+</div>
+
+<div class="settings-modal" *ngIf="showSettings" role="dialog" aria-modal="true">
+  <div class="settings-card">
+    <button class="close-btn" type="button" aria-label="Fermer" (click)="closeSettings()">✕</button>
+    <h2>Paramètres</h2>
+    <label for="api-url-home">Adresse du serveur</label><br>
+    <input id="api-url-home" type="text" [(ngModel)]="apiUrl" placeholder="http://SERVEUR:3000/api" />
+    <br><br>
+    <button class="btn-save" type="button" (click)="saveApiUrl()">Enregistrer</button>
+  </div>
+</div>
