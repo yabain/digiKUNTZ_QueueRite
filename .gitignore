@@ -147,3 +147,5 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+/Queue_App_Frontend_Angular17_v1.0/.angular
+/Queue_App_Backend_v1.0/media

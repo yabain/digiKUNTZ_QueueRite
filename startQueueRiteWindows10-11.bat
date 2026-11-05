@@ -43,7 +43,7 @@ if errorlevel 1 (
     net start %MONGO_SERVICE% >nul 2>&1
     if errorlevel 1 (
         echo   [ERREUR] Service %MONGO_SERVICE% impossible a demarrer.
-        echo   Verifiez que windows10-11Deployment.bat a ete execute (service MongoDBQueue).
+        echo   Verifiez que windows10-11Deployment.bat a ete execute ^(service MongoDBQueue^).
     ) else (
         echo   [OK] MongoDB demarre.
     )
@@ -58,7 +58,7 @@ if "%PORTUP%"=="1" (
     echo   [OK] Backend deja actif sur le port %BACKEND_PORT%.
 ) else (
     if not exist "%BACKEND_DIR%\dist\main.js" (
-        echo   [ERREUR] dist\main.js absent. Build requis (windows10-11Deployment.bat).
+        echo   [ERREUR] dist\main.js absent. Build requis ^(windows10-11Deployment.bat^).
     ) else (
         start "QueueRite Backend" /D "%BACKEND_DIR%" cmd /k "node dist\main.js"
         netsh advfirewall firewall add rule name="QueueRite-Backend" dir=in action=allow protocol=TCP localport=%BACKEND_PORT% >nul 2>&1
